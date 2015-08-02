@@ -10,5 +10,6 @@ application/logs/*
 
 *.workspace
 *.phprj
+.codelite
 
 public/css/.sass-cache
