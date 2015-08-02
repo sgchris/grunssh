@@ -11,7 +11,8 @@
 	<link rel="stylesheet" href="/public/css/layout.css?v=1.0&<?php echo uniqid('ver_'); ?>" />
 	<link rel="stylesheet" href="/public/css/styles.css?v=1.0&<?php echo uniqid('ver_'); ?>" />
 	
-	<script src="/public/js/scripts.js"></script>
+	<script src="/public/js/jquery.min.js?<?php echo uniqid('ver_'); ?>"></script>
+	<script src="/public/js/app.js?<?php echo uniqid('ver_'); ?>"></script>
 </head>
 <body>
 <header>
