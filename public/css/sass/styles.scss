@@ -1,0 +1,47 @@
+
+.main-panel {
+	display: block;
+	float: left;
+	
+	min: {
+		height: 300px;
+		width: 300px;
+	}
+	
+	padding: 10px;
+	border: 1px solid #CCC;
+	
+	ul.toolbar {
+		display: block;
+		
+		border: {
+			bottom: 1px solid #CCC;
+		}
+		
+		li {
+			display: inline-block;
+			
+			a {
+				display: inline-block;
+				height: 30px;
+				padding: 0 5px;
+				line-height: 30px;
+				vertical-align: top;
+
+				text-decoration: none;
+				
+				&:hover {
+					background: #EEE;
+				}
+			}
+		}
+	}
+} 
+
+#left-sidebar {
+	// ..
+}
+
+#main-content {
+	
+}

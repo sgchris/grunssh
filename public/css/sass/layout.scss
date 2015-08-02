@@ -1,0 +1,32 @@
+@import 'reset';
+
+// init sass:
+// cd /var/www/grunssh/public/css
+// sass --watch sass:. --style compressed
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	font: {
+		size: 14px;
+		family: "Open Sans";
+	}
+
+	header {
+		ul {
+			background: #EEE;
+			border-bottom: 1px solid #CCC;
+			
+			li {
+				display: inline-block;
+				height: 40px;
+				line-height: 40px;
+				padding: 0 10px;
+				vertical-align: top;
+			}
+		}
+	}
+}
+
