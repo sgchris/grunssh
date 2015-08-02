@@ -1,10 +1,10 @@
-$(function() {
-	
-	// cache
+/**
+ * ACE API http://ace.c9.io/#nav=api&api=editor
+ */
+var manageResize = function() {
 	var $window = $(window);
 	
 	var fixSizes = function() {
-		
 		$('#left-sidebar').css({
 			height: $window.outerHeight() - $('header').outerHeight()
 		});
@@ -19,5 +19,17 @@ $(function() {
 	
 	fixSizes();
 	$window.on('resize', fixSizes);
-	console.log('changed');
+}
+
+$(function() {
+	manageResize();
+	
+	window.editor = ace.edit('editor-wrapper');
+	editor.setOptions({
+		fontFamily: "consolas, monospace",
+		fontSize: "13px",
+		tabSize: 4
+	});
+	editor.session.setMode("ace/mode/php");
+	
 });

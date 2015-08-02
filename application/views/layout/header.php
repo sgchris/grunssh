@@ -12,6 +12,10 @@
 	<link rel="stylesheet" href="/public/css/styles.css?v=1.0&<?php echo uniqid('ver_'); ?>" />
 	
 	<script src="/public/js/jquery.min.js?<?php echo uniqid('ver_'); ?>"></script>
+	
+	<script src="/public/js/ace-builds/src-min-noconflict/ace.js?<?php echo uniqid('ver_'); ?>"></script>
+	<script src="/public/js/ace-builds/src-min-noconflict/mode-php.js?<?php echo uniqid('ver_'); ?>"></script>
+	
 	<script src="/public/js/app.js?<?php echo uniqid('ver_'); ?>"></script>
 </head>
 <body>
