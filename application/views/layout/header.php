@@ -32,9 +32,9 @@
 		<li class="logo">LOGO</li>
 		<li>
 			<form name="connection-auth-form">
-			<input type="text" name="connection-auth-host" placeholder="jon.snow.wf" />
-			<input type="text" name="connection-auth-login" placeholder="jon_snow" />
-			<input type="password" name="connection-auth-password" />
+			<input type="text" name="connection-auth-host" placeholder="jon.snow.wf" value="localhost" />
+			<input type="text" name="connection-auth-login" placeholder="jon_snow" value="greg" />
+			<input type="password" name="connection-auth-password" value="apocal12" />
 			<input type="submit" value="Connect" />
 			<input type="button" value="Disconnect" disabled="true" />
 			</form>

@@ -40,19 +40,15 @@ var initializeFilesTree = function() {
 				"url" : "/files",
 				"type": "post",
 				"data" : function (node) {
+					if (node.id == '#') node.id = '/';
+					
 					var authData = {
 						"host": $('input[name="connection-auth-host"]').val(),
-						"username": $('input[name="connection-auth-login"]').val(),
+						"login": $('input[name="connection-auth-login"]').val(),
 						"password": $('input[name="connection-auth-password"]').val(),
 					};
 					
-					if (!authData.host || !authData.username || !authData.password) {
-						return false;
-					}
-					
-					return $.extend({ 
-						"id" : node.id,
-					}, authData);
+					return $.extend({"id" : node.id}, authData);
 				},
 				"dataType" : "json"
 			}
