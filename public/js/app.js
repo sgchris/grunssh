@@ -7,6 +7,8 @@ var manageResize = function() {
 	var fixSizes = function() {
 		$('#left-sidebar').css({
 			height: $window.outerHeight() - $('header').outerHeight()
+		}).find('#files-tree-wrapper').css({
+			height: $('#left-sidebar').height() - $('#left-sidebar ul.toolbar').outerHeight()
 		});
 		
 		$('#main-content').css({
@@ -19,17 +21,49 @@ var manageResize = function() {
 	
 	fixSizes();
 	$window.on('resize', fixSizes);
-}
+};
 
-$(function() {
-	manageResize();
-	
+var initializeEditor = function() {
 	window.editor = ace.edit('editor-wrapper');
 	editor.setOptions({
 		fontFamily: "consolas, monospace",
 		fontSize: "13px",
 		tabSize: 4
 	});
-	editor.session.setMode("ace/mode/php");
+	editor.session.setMode("ace/mode/php");	
+};
+
+var initializeFilesTree = function() {
+	$('#files-tree-wrapper').jstree({
+		'core' : {
+			'data' : {
+				"url" : "/files",
+				"type": "post",
+				"data" : function (node) {
+					var authData = {
+						"host": $('input[name="connection-auth-host"]').val(),
+						"username": $('input[name="connection-auth-login"]').val(),
+						"password": $('input[name="connection-auth-password"]').val(),
+					};
+					
+					if (!authData.host || !authData.username || !authData.password) {
+						return false;
+					}
+					
+					return $.extend({ 
+						"id" : node.id,
+					}, authData);
+				},
+				"dataType" : "json"
+			}
+		}
+	});
+}
+
+$(function() {
+	manageResize();
 	
+	initializeEditor();
+	
+	initializeFilesTree();
 });

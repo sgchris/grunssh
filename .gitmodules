@@ -1,3 +1,9 @@
 [submodule "public/js/ace-builds"]
 	path = public/js/ace-builds
 	url = https://github.com/ajaxorg/ace-builds.git
+[submodule "public/js/jstree"]
+	path = public/js/jstree
+	url = https://github.com/vakata/jstree.git
+[submodule "application/third_party/ssh"]
+	path = application/third_party/ssh
+	url = https://github.com/netojoaobatista/ssh.git

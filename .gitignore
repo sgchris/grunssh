@@ -13,3 +13,5 @@ application/logs/*
 .codelite
 
 public/css/.sass-cache
+
+.tern-*
