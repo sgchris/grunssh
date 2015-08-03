@@ -4,6 +4,3 @@
 [submodule "public/js/jstree"]
 	path = public/js/jstree
 	url = https://github.com/vakata/jstree.git
-[submodule "application/third_party/ssh"]
-	path = application/third_party/ssh
-	url = https://github.com/members/ssh.git
