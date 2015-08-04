@@ -40,6 +40,10 @@
 
 #left-sidebar {
 	width: 300px;
+
+	#files-tree-wrapper {
+		overflow: auto;
+	}
 }
 
 #main-content {

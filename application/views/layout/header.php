@@ -3,28 +3,28 @@
 <head>
 	<meta charset="utf-8">
 
-	<title><?php echo isset($header_title) ? htmlentities($header_title) : config_item('default_header_title'); ?></title>
-	<meta name="description" content="<?php echo isset($header_description) ? htmlentities($header_description) : config_item('default_header_description'); ?>">
+	<title><?php echo isset($header_title) ? htmlentities($header_title) : config_item('default_header_title');?></title>
+	<meta name="description" content="<?php echo isset($header_description) ? htmlentities($header_description) : config_item('default_header_description');?>">
 	<meta name="author" content="Gregory Chris">
-	
+
 	<!-- vendor styles -->
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="/public/js/jstree/dist/themes/default/style.min.css?<?php echo uniqid('ver_'); ?>" />
-	
+	<link rel="stylesheet" href="/public/js/jstree/dist/themes/default/style.min.css?<?php echo uniqid('ver_');?>" />
+
 	<!-- custom styles -->
-	<link rel="stylesheet" href="/public/css/layout.css?v=1.0&<?php echo uniqid('ver_'); ?>" />
-	<link rel="stylesheet" href="/public/css/styles.css?v=1.0&<?php echo uniqid('ver_'); ?>" />
-	
+	<link rel="stylesheet" href="/public/css/layout.css?v=1.0&<?php echo uniqid('ver_');?>" />
+	<link rel="stylesheet" href="/public/css/styles.css?v=1.0&<?php echo uniqid('ver_');?>" />
+
 	<!-- vendor scripts -->
-	<script src="/public/js/jquery.min.js?<?php echo uniqid('ver_'); ?>"></script>
-	
-	<script src="/public/js/ace-builds/src-min-noconflict/ace.js?<?php echo uniqid('ver_'); ?>"></script>
-	<script src="/public/js/ace-builds/src-min-noconflict/mode-php.js?<?php echo uniqid('ver_'); ?>"></script>
-	
-	<script src="/public/js/jstree/dist/jstree.min.js?<?php echo uniqid('ver_'); ?>"></script>
-	
+	<script src="/public/js/jquery.min.js?<?php echo uniqid('ver_');?>"></script>
+
+	<script src="/public/js/ace-builds/src-min-noconflict/ace.js?<?php echo uniqid('ver_');?>"></script>
+	<script src="/public/js/ace-builds/src-min-noconflict/mode-php.js?<?php echo uniqid('ver_');?>"></script>
+
+	<script src="/public/js/jstree/dist/jstree.min.js?<?php echo uniqid('ver_');?>"></script>
+
 	<!-- custom scripts -->
-	<script src="/public/js/app.js?<?php echo uniqid('ver_'); ?>"></script>
+	<script src="/public/js/app.js?<?php echo uniqid('ver_');?>"></script>
 </head>
 <body>
 <header>

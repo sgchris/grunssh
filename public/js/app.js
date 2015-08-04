@@ -40,8 +40,6 @@ var initializeFilesTree = function() {
 				"url" : "/files",
 				"type": "post",
 				"data" : function (node) {
-					if (node.id == '#') node.id = '/';
-					
 					var authData = {
 						"host": $('input[name="connection-auth-host"]').val(),
 						"login": $('input[name="connection-auth-login"]').val(),
