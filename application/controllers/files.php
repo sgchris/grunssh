@@ -87,14 +87,26 @@ class Files extends CI_Controller {
 		
 		// connect to remote host
 		$ssh = new ssh($params['host'], $params['login'], $params['password']);
-		
-		// download the file to temp local file
-		$result = $ssh->download($filePath, $this->localTempFile);
-		if ($result === false) {
-			echo json_encode(array('result' => 'error', 'error' => 'cannot get remote file'));
-			return;
+
+		// if params['content'] was supplied, save the file, otherwise get the file
+		if (isset($params['content'])) {
+			file_put_contents($this->localTempFile, $params['content']);
+			$result = $ssh->upload($this->localTempFile, $filePath);
+			if ($result === false) {
+				echo json_encode(array('result' => 'error', 'error' => 'cannot get remote file'));
+				return;
+			}
+			
+			echo json_encode(array('result' => 'success'));
+		} else {
+			// download the file to temp local file
+			$result = $ssh->download($filePath, $this->localTempFile);
+			if ($result === false) {
+				echo json_encode(array('result' => 'error', 'error' => 'cannot get remote file'));
+				return;
+			}
+			
+			echo json_encode(array('result' => 'success', 'content' => file_get_contents($this->localTempFile)));
 		}
-		
-		echo json_encode(array('result' => 'success', 'content' => file_get_contents($this->localTempFile)));
 	}	
 }

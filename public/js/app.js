@@ -1,5 +1,8 @@
 /**
  * ACE API http://ace.c9.io/#nav=api&api=editor
+ * @todo
+- on reload file, save curet position
+- implement tree buttons actions
  */
 var manageResize = function() {
 	var $window = $(window);
@@ -25,12 +28,12 @@ var manageResize = function() {
 
 var initializeEditor = function() {
 	window.editor = ace.edit('editor-wrapper');
-	editor.setOptions({
+	window.editor.setOptions({
 		fontFamily: "consolas, monospace",
 		fontSize: "13px",
 		tabSize: 4
 	});
-	editor.session.setMode("ace/mode/php");	
+	window.editor.session.setMode("ace/mode/php");	
 };
 
 var getAuthData = function() {
@@ -62,11 +65,17 @@ var selectedFile = {
 	
 	set: function(_file) {
 		selectedFile._file = _file;
+		
+		// display the file in the corner
 		var selectedFileText = _file || '';
 		if (selectedFileText.length) {
 			selectedFileText = selectedFileText.replace(/_SEP_/g, '/');
 		}
 		$('#selected_file').text(selectedFileText);
+	},
+	
+	get: function() {
+		return selectedFile._file;
 	},
 	
 	clear: function() {
@@ -75,7 +84,7 @@ var selectedFile = {
 }
 
 // AJAX object
-var openFileXHR = null;
+var treeXHR = null;
 
 // bind tree events (open, save, ...)
 var bindTreeEvents = function() {
@@ -86,10 +95,10 @@ var bindTreeEvents = function() {
 		}
 		
 		// cancel previous request
-		openFileXHR && openFileXHR.abort();
+		treeXHR && treeXHR.abort();
 		
 		// get the content of a file
-		openFileXHR = $.ajax({
+		treeXHR = $.ajax({
 			type: 'post',
 			url: '/files/content',
 			data: $.extend({"id" : data.node.id}, getAuthData()),
@@ -100,7 +109,70 @@ var bindTreeEvents = function() {
 				}
 			},
 			dataType: 'json'
-		})
+		});
+	});
+}
+
+// AJAX object
+var editorXHR = null;
+
+var bindEditorEvents = function() {
+	$('#toolbar_save_file').on('click', function() {
+		var currentFile = selectedFile.get();
+		if (!currentFile) {
+			return;
+		}
+		
+		var fileContent = window.editor.getValue();
+		
+		// cancel previous request
+		editorXHR && editorXHR.abort();
+		
+		// notify
+		selectedFile.set('Saving...');
+		
+		// get the content of a file
+		editorXHR = $.ajax({
+			type: 'post',
+			url: '/files/content',
+			data: $.extend({"id" : currentFile, 'content': fileContent}, getAuthData()),
+			success: function(res) {
+				if (res && res.result == 'success') {
+					selectedFile.set('Saved!');
+					setTimeout(function() {
+						selectedFile.set(currentFile);
+					}, 2000);
+				}
+			},
+			dataType: 'json'
+		});
+	});
+	
+	$('#toolbar_reload_file').on('click', function() {
+		var currentFile = selectedFile.get();
+		if (!currentFile) {
+			return;
+		}
+		
+		// cancel previous request
+		editorXHR && editorXHR.abort();
+		
+		// notify
+		selectedFile.set('Reloading...');
+		
+		// get the content of a file
+		editorXHR = $.ajax({
+			type: 'post',
+			url: '/files/content',
+			data: $.extend({"id" : currentFile}, getAuthData()),
+			success: function(res) {
+				if (res && res.result == 'success' && typeof(res.content) != 'undefined') {
+					selectedFile.set(currentFile);
+					window.editor.setValue(res.content, -1);
+				}
+			},
+			dataType: 'json'
+		});
 	});
 }
 
@@ -112,4 +184,6 @@ $(function() {
 	initializeFilesTree();
 	
 	bindTreeEvents();
+	
+	bindEditorEvents();
 });
