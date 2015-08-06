@@ -56,10 +56,30 @@ var initializeFilesTree = function() {
 	});
 }
 
+// currently selected file manager (the active file on the editor)
+var selectedFile = {
+	_file: null,
+	
+	set: function(_file) {
+		selectedFile._file = _file;
+		var selectedFileText = _file || '';
+		if (selectedFileText.length) {
+			selectedFileText = selectedFileText.replace(/_SEP_/g, '/');
+		}
+		$('#selected_file').text(selectedFileText);
+	},
+	
+	clear: function() {
+		selectedFile.set(null);
+	}
+}
+
+// AJAX object
 var openFileXHR = null;
-var bindEditorEvents = function() {
+
+// bind tree events (open, save, ...)
+var bindTreeEvents = function() {
 	$('#files-tree-wrapper').on('select_node.jstree', function(e, data) {
-		
 		// check if the node isn't file
 		if (data.node.original.type != 'file') {
 			return;
@@ -67,12 +87,15 @@ var bindEditorEvents = function() {
 		
 		// cancel previous request
 		openFileXHR && openFileXHR.abort();
+		
+		// get the content of a file
 		openFileXHR = $.ajax({
 			type: 'post',
 			url: '/files/content',
 			data: $.extend({"id" : data.node.id}, getAuthData()),
 			success: function(res) {
 				if (res && res.result == 'success' && typeof(res.content) != 'undefined') {
+					selectedFile.set(data.node.id);
 					window.editor.setValue(res.content, -1);
 				}
 			},
@@ -88,5 +111,5 @@ $(function() {
 	
 	initializeFilesTree();
 	
-	bindEditorEvents();
+	bindTreeEvents();
 });

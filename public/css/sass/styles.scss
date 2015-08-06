@@ -51,5 +51,11 @@
 }
 
 #main-content {
-	
+	#selected_file {
+		float: right;
+		font-family: consolas, monospace;
+		height: 30px;
+		padding: 0 5px;
+		line-height: 30px;
+	}
 }
