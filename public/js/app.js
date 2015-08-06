@@ -33,6 +33,14 @@ var initializeEditor = function() {
 	editor.session.setMode("ace/mode/php");	
 };
 
+var getAuthData = function() {
+	return {
+		"host": $('input[name="connection-auth-host"]').val(),
+		"login": $('input[name="connection-auth-login"]').val(),
+		"password": $('input[name="connection-auth-password"]').val(),
+	};
+};
+
 var initializeFilesTree = function() {
 	$('#files-tree-wrapper').jstree({
 		'core' : {
@@ -40,17 +48,36 @@ var initializeFilesTree = function() {
 				"url" : "/files",
 				"type": "post",
 				"data" : function (node) {
-					var authData = {
-						"host": $('input[name="connection-auth-host"]').val(),
-						"login": $('input[name="connection-auth-login"]').val(),
-						"password": $('input[name="connection-auth-password"]').val(),
-					};
-					
-					return $.extend({"id" : node.id}, authData);
+					return $.extend({"id" : node.id}, getAuthData());
 				},
 				"dataType" : "json"
 			}
 		}
+	});
+}
+
+var openFileXHR = null;
+var bindEditorEvents = function() {
+	$('#files-tree-wrapper').on('select_node.jstree', function(e, data) {
+		
+		// check if the node isn't file
+		if (data.node.original.type != 'file') {
+			return;
+		}
+		
+		// cancel previous request
+		openFileXHR && openFileXHR.abort();
+		openFileXHR = $.ajax({
+			type: 'post',
+			url: '/files/content',
+			data: $.extend({"id" : data.node.id}, getAuthData()),
+			success: function(res) {
+				if (res && res.result == 'success' && typeof(res.content) != 'undefined') {
+					window.editor.setValue(res.content, -1);
+				}
+			},
+			dataType: 'json'
+		})
 	});
 }
 
@@ -60,4 +87,6 @@ $(function() {
 	initializeEditor();
 	
 	initializeFilesTree();
+	
+	bindEditorEvents();
 });

@@ -6,8 +6,13 @@ require_once __DIR__ . '/../third_party/ssh/ssh.class.php';
 
 class Files extends CI_Controller {
 
+	protected $localTempFile;
+	
 	public function __construct() {
 		parent::__construct();
+		
+		// initialize name for temp file
+		$this->localTempFile = sys_get_temp_dir().DIRECTORY_SEPARATOR.date('m_Y').'.tmp';
 	}
 
 	public function index() {
@@ -30,6 +35,7 @@ class Files extends CI_Controller {
 				echo json_encode(array(array(
 					'id' => '_SEP_',
 					'text' => '/',
+					'icon' => '/public/img/ic_folder_open_black_18dp.png',
 					'children' => true,
 				)));
 				return;
@@ -46,6 +52,7 @@ class Files extends CI_Controller {
 					'id' => str_replace(DIRECTORY_SEPARATOR, '_SEP_', $fullFilePath),
 					'text' => $fileData['name'],
 					'type' => $fileData['type'] == 'dir' ? 'folder' : 'file',
+					'icon' => $fileData['type'] == 'dir' ? '/public/img/ic_folder_open_black_18dp.png' : 'file',
 					'children' => ($fileData['type'] == 'dir'),
 				);
 			}
@@ -56,4 +63,38 @@ class Files extends CI_Controller {
 			echo json_encode($outputArray);
 		}
 	}
+	
+	/**
+	 * @brief get content of a file
+	 * @param GET `path`
+	 * @return
+	 */
+	public function content() {
+		$params = $this->input->post();
+		if (empty($params) ||
+			!isset($params['id']) ||
+			!isset($params['host']) ||
+			!isset($params['login']) ||
+			!isset($params['password'])
+		) {
+			echo json_encode(array('result' => 'error', 'error' => 'missing parameters'));
+			return;
+		}
+		
+		// get the parameter
+		$filePath = $params['id'];
+		$filePath = str_replace('_SEP_', DIRECTORY_SEPARATOR, $filePath);
+		
+		// connect to remote host
+		$ssh = new ssh($params['host'], $params['login'], $params['password']);
+		
+		// download the file to temp local file
+		$result = $ssh->download($filePath, $this->localTempFile);
+		if ($result === false) {
+			echo json_encode(array('result' => 'error', 'error' => 'cannot get remote file'));
+			return;
+		}
+		
+		echo json_encode(array('result' => 'success', 'content' => file_get_contents($this->localTempFile)));
+	}	
 }
