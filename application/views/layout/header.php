@@ -24,6 +24,9 @@
 	<script src="/public/js/jstree/dist/jstree.min.js?<?php echo uniqid('ver_');?>"></script>
 
 	<!-- custom scripts -->
+	<script src="/public/js/app/auth.js?<?php echo uniqid('ver_');?>"></script>
+	<script src="/public/js/app/tree.js?<?php echo uniqid('ver_');?>"></script>
+	<script src="/public/js/app/editor.js?<?php echo uniqid('ver_');?>"></script>
 	<script src="/public/js/app.js?<?php echo uniqid('ver_');?>"></script>
 </head>
 <body>
