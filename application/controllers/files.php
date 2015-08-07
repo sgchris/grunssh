@@ -52,7 +52,7 @@ class Files extends CI_Controller {
 					'id' => str_replace(DIRECTORY_SEPARATOR, '_SEP_', $fullFilePath),
 					'text' => $fileData['name'],
 					'type' => $fileData['type'] == 'dir' ? 'folder' : 'file',
-					'icon' => $fileData['type'] == 'dir' ? '/public/img/ic_folder_open_black_18dp.png' : 'file',
+					'icon' => $fileData['type'] == 'dir' ? '/public/img/ic_folder_open_black_18dp.png' : '/public/img/ic_receipt_black_18dp.png',
 					'children' => ($fileData['type'] == 'dir'),
 				);
 			}

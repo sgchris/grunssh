@@ -1,7 +1,7 @@
 <div id="left-sidebar" class="main-panel">
 	<ul class="toolbar">
 		<li><a href="javascript:;" id="toolbar_add_folder" title="Add folder"><img src="/public/img/ic_add_circle_black_24dp.png" width="24" height="24" /></a></li>
-		<li><a href="javascript:;" id="toolbar_add_file" title="Add file"><img src="/public/img/ic_add_circle_outline_black_24dp.png" width="24" height="24" /></a></li>
+		<li><a href="javascript:;" id="toolbar_add_file" title="Add file"><img src="/public/img/ic_note_add_black_24dp.png" width="24" height="24" /></a></li>
 		<li><a href="javascript:;" id="toolbar_rename" title="Rename"><img src="/public/img/ic_create_black_24dp.png" width="24" height="24" /></a></li>
 	</ul>
 	<div id="files-tree-wrapper"></div>
