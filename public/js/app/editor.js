@@ -85,6 +85,9 @@
 			// notify
 			selectedFile.set('Reloading...');
 			
+			// save curet position
+			var currentPosition = editorObject.getCursorPosition();
+			
 			// get the content of a file
 			editorXHR = $.ajax({
 				type: 'post',
@@ -93,7 +96,9 @@
 				success: function(res) {
 					if (res && res.result == 'success' && typeof(res.content) != 'undefined') {
 						selectedFile.set(currentFile);
-						window.editor.setValue(res.content, -1);
+						editorObject.setValue(res.content, -1);
+						editorObject.gotoLine(currentPosition.row + 1, currentPosition.column);
+						editorObject.focus();
 					}
 				},
 				dataType: 'json'

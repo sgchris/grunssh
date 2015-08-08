@@ -8,6 +8,18 @@ class Files extends CI_Controller {
 
 	protected $localTempFile;
 	
+	/**
+	 * @brief list of file extensions that will have "code file" icon - "<>"
+	 * @var array
+	 */
+	protected $knownCodeFileExtensions = array(
+		'php','phtml','inc','html','xml','js','txt','json','yml','conf',
+		'css','scss','less','sass',
+		'java',
+		'c','cpp','h','hpp',
+		'htaccess', 'gitignore', 'gitmodules','log','md',
+	);
+	
 	public function __construct() {
 		parent::__construct();
 		
@@ -48,14 +60,21 @@ class Files extends CI_Controller {
 
 			foreach ($files as $fileData) {
 				$fullFilePath = rtrim($folderToRead, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $fileData['name'];
+				$icon = $fileData['type'] == 'dir' ? '/public/img/ic_folder_open_black_18dp.png' : '/public/img/ic_description_black_18dp.png';
+				if ($fileData['type'] == 'file' && preg_match('%\.('.implode('|', $this->knownCodeFileExtensions).')$%i', $fileData['name'])) {
+					$icon = '/public/img/ic_code_black_18dp.png';
+				}
 				$outputArray[] = array(
 					'id' => str_replace(DIRECTORY_SEPARATOR, '_SEP_', $fullFilePath),
 					'text' => $fileData['name'],
 					'type' => $fileData['type'] == 'dir' ? 'folder' : 'file',
-					'icon' => $fileData['type'] == 'dir' ? '/public/img/ic_folder_open_black_18dp.png' : '/public/img/ic_receipt_black_18dp.png',
+					'icon' => $icon,
 					'children' => ($fileData['type'] == 'dir'),
 				);
 			}
+			
+			// sort - first folders A-Z, than files A-Z
+			$this->sortFiles($outputArray);
 
 			//$result = $ssh("ls -la ".escapeshellarg($params['id']));
 			// load the children of `id`
@@ -108,5 +127,19 @@ class Files extends CI_Controller {
 			
 			echo json_encode(array('result' => 'success', 'content' => file_get_contents($this->localTempFile)));
 		}
-	}	
+	}
+	
+	protected function sortFiles(array &$filesArray) {
+		return usort($filesArray, function($a, $b) {
+			if ($a['type'] !== $b['type']) {
+				if ($a['type'] === 'folder') {
+					return -1;
+				} else {
+					return 1;
+				}
+			}
+			
+			return strcasecmp($a['text'], $b['text']);
+		});
+	}
 }
