@@ -44,12 +44,23 @@ class Files extends CI_Controller {
 		} elseif ($params['id'] && $params['host'] && $params['login'] && $params['password']) {
 
 			if ($params['id'] == '#') {
-				echo json_encode(array(array(
-					'id' => '_SEP_',
-					'text' => '/',
-					'icon' => '/public/img/ic_folder_open_black_18dp.png',
-					'children' => true,
-				)));
+				if (isset($params['rootFolder']) && !empty($params['rootFolder'])) {
+					$rootFolder = $params['rootFolder'];
+					$rootFolderId = str_replace('/', '_SEP_', $rootFolder);
+					echo json_encode(array(array(
+						'id' => $rootFolderId,
+						'text' => $rootFolder,
+						'icon' => '/public/img/ic_folder_open_black_18dp.png',
+						'children' => true,
+					)));
+				} else {
+					echo json_encode(array(array(
+						'id' => '_SEP_',
+						'text' => '/',
+						'icon' => '/public/img/ic_folder_open_black_18dp.png',
+						'children' => true,
+					)));
+				}
 				return;
 			}
 
