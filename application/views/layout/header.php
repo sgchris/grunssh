@@ -15,7 +15,23 @@
 	<link rel="stylesheet" href="/public/css/layout.css?v=1.0&<?php echo uniqid('ver_');?>" />
 	<link rel="stylesheet" href="/public/css/styles.css?v=1.0&<?php echo uniqid('ver_');?>" />
 
-	<!-- vendor scripts -->
+	<!-- vendor scripts -->	
+	<script src="/public/js/griquire/griquire.min.js?<?php echo uniqid('ver_');?>"></script>
+	<script type="text/javascript">
+	griquire([
+	    "/public/js/jquery.min.js?<?php echo uniqid('ver_');?>",	           
+	    "/public/js/ace-builds/src-min-noconflict/ace.js?<?php echo uniqid('ver_');?>",	           
+	    "/public/js/ace-builds/src-min-noconflict/mode-php.js?<?php echo uniqid('ver_');?>",	           
+	    "/public/js/jstree/dist/jstree.min.js?<?php echo uniqid('ver_');?>",	           
+	    "/public/js/app/auth.js?<?php echo uniqid('ver_');?>",	           
+	    "/public/js/app/tree.js?<?php echo uniqid('ver_');?>",	           
+	    "/public/js/app/editor.js?<?php echo uniqid('ver_');?>",	           
+	    "/public/js/app.js?<?php echo uniqid('ver_');?>",	           
+	], function() {
+		// all the above libs are loaded at this point
+	});
+	</script>
+	<!-- 
 	<script src="/public/js/jquery.min.js?<?php echo uniqid('ver_');?>"></script>
 
 	<script src="/public/js/ace-builds/src-min-noconflict/ace.js?<?php echo uniqid('ver_');?>"></script>
@@ -23,11 +39,11 @@
 
 	<script src="/public/js/jstree/dist/jstree.min.js?<?php echo uniqid('ver_');?>"></script>
 
-	<!-- custom scripts -->
 	<script src="/public/js/app/auth.js?<?php echo uniqid('ver_');?>"></script>
 	<script src="/public/js/app/tree.js?<?php echo uniqid('ver_');?>"></script>
 	<script src="/public/js/app/editor.js?<?php echo uniqid('ver_');?>"></script>
 	<script src="/public/js/app.js?<?php echo uniqid('ver_');?>"></script>
+	 -->
 </head>
 <body>
 <header>

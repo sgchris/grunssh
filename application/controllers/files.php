@@ -42,7 +42,6 @@ class Files extends CI_Controller {
 				),
 			));
 		} elseif ($params['id'] && $params['host'] && $params['login'] && $params['password']) {
-
 			if ($params['id'] == '#') {
 				if (isset($params['rootFolder']) && !empty($params['rootFolder'])) {
 					$rootFolder = $params['rootFolder'];
@@ -64,9 +63,11 @@ class Files extends CI_Controller {
 				return;
 			}
 
-			$folderToRead = str_replace('_SEP_', DIRECTORY_SEPARATOR, $params['id']);
+			$folderToRead = str_replace('_SEP_', '/', $params['id']);
 			$ssh = new ssh($params['host'], $params['login'], $params['password']);
+			
 			$files = $ssh->ls($folderToRead);
+            
 			$outputArray = array();
 
 			foreach ($files as $fileData) {
