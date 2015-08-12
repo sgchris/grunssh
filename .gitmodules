@@ -7,3 +7,6 @@
 [submodule "application/third_party/ssh"]
 	path = application/third_party/ssh
 	url = https://github.com/sgchris/ssh.git
+[submodule "public/js/griquire"]
+	path = public/js/griquire
+	url = https://github.com/sgchris/griquire.git

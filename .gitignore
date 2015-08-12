@@ -8,6 +8,7 @@ application/logs/*
 !application/logs/index.html
 !application/logs/.htaccess
 
+# codelite related
 *.workspace
 *.phprj
 .codelite
@@ -15,3 +16,8 @@ application/logs/*
 public/css/.sass-cache
 
 .tern-*
+
+# eclipse related
+.buildpath
+.project
+.settings
