@@ -54,8 +54,9 @@
 			<input type="text" name="connection-auth-host" placeholder="jon.snow.wf" value="localhost" />
 			<input type="text" name="connection-auth-login" placeholder="jon_snow" value="greg" />
 			<input type="password" name="connection-auth-password" value="apocal12" />
-			<input type="submit" value="Connect" />
-			<input type="button" value="Disconnect" disabled="true" />
+			<input type="submit" value="Connect" id="header_button_submit" />
+			<input type="button" value="Disconnect" id="header_button_disconnect" disabled="true" />
+			<input type="button" value="Store connection in a cookie (!! not secure)" id="header_button_store_connection_in_cookie" disabled="true" />
 			</form>
 		</li>
 		<li>
