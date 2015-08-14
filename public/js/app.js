@@ -29,6 +29,7 @@ var manageResize = function() {
 $(function() {
 	manageResize();
 	
+	auth.initialize();
 	tree.initialize();
 	editor.initialize();
 });

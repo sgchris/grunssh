@@ -9,9 +9,63 @@
 		};
 	};
 
+	var testConnection = function(successFn, failureFn) {
+		$.ajax({
+			type: 'post',
+			url: '/auth/test',
+			data: getData(), 
+			success: function(res) {
+				if (res && res.result == 'success') {
+					if (successFn) successFn();
+				} else {
+					res && res.error && failureFn && failureFn(res.error);
+				}
+			},
+			failure: failureFn,
+			dataType: 'json'
+		});
+	}
+
+	var initConnectForm = function() {
+
+		// submit action
+		$('[name="connection-auth-form"]').on('submit', function(e) {
+			//e.preventDefault();
+			testConnection(function() {
+				window.auth.connected = true;
+				$('#header_button_submit').attr('disabled', true);
+				$('#header_button_disconnect').removeAttr('disabled');
+				$('#header_button_store_connection_in_cookie').removeAttr('disabled');
+			}, function(errorMsg) {
+				window.auth.connected = false;
+				alert(errorMsg);
+			});
+
+			return false;
+		});
+
+		// disconnect
+		$('#header_button_disconnect').on('click', function() {
+			window.auth.connected = false;
+			// enable/disable buttons
+			$('#header_button_submit').removeAttr('disabled');
+			$('#header_button_disconnect').attr('disabled', 'true');
+			$('#header_button_store_connection_in_cookie').attr('disabled', true);
+		});
+	}
+
 	// the exported object
 	window.auth = {
+		connected: false,
+
+		initialize: function() {
+			initConnectForm();
+		},
+
+		// get connection info from the form
 		getData: getData
 	};
+
+
 
 })();
