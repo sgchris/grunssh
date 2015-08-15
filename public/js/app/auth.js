@@ -30,14 +30,27 @@
 
 		// submit action
 		$('[name="connection-auth-form"]').on('submit', function(e) {
-			//e.preventDefault();
+			var originalSubmitButtonVal = $('#header_button_submit').val();
+			$('#header_button_submit').val('Connecting...');
 			testConnection(function() {
+				// set as connected
 				window.auth.connected = true;
+				
+				// restore original button value
+				$('#header_button_submit').val(originalSubmitButtonVal);
+				
+				// enable/disable buttons
 				$('#header_button_submit').attr('disabled', true);
 				$('#header_button_disconnect').removeAttr('disabled');
 				$('#header_button_store_connection_in_cookie').removeAttr('disabled');
+				
+				// disable the inputs
+				$('[name="connection-auth-form"]').find('input[type="text"], input[type="password"]').attr('disabled', true);
 			}, function(errorMsg) {
-				window.auth.connected = false;
+				// restore original button value
+				$('#header_button_submit').val(originalSubmitButtonVal);
+				
+				// display the error message
 				alert(errorMsg);
 			});
 
@@ -47,10 +60,14 @@
 		// disconnect
 		$('#header_button_disconnect').on('click', function() {
 			window.auth.connected = false;
+			
 			// enable/disable buttons
 			$('#header_button_submit').removeAttr('disabled');
 			$('#header_button_disconnect').attr('disabled', 'true');
 			$('#header_button_store_connection_in_cookie').attr('disabled', true);
+			
+			// re-enable the inputs
+			$('[name="connection-auth-form"]').find('input[type="text"], input[type="password"]').removeAttr('disabled');
 		});
 	}
 
@@ -65,7 +82,5 @@
 		// get connection info from the form
 		getData: getData
 	};
-
-
 
 })();

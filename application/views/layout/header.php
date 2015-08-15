@@ -56,7 +56,9 @@
 			<input type="password" name="connection-auth-password" value="apocal12" />
 			<input type="submit" value="Connect" id="header_button_submit" />
 			<input type="button" value="Disconnect" id="header_button_disconnect" disabled="true" />
-			<input type="button" value="Store connection in a cookie (!! not secure)" id="header_button_store_connection_in_cookie" disabled="true" />
+			<input type="button" value="Store connection (not secure!)" 
+				title="The connection information is stored in a cookie, including the password. Not recommended, unless you connect to your local development machine" 
+				id="header_button_store_connection_in_cookie" disabled="true" />
 			</form>
 		</li>
 		<li>

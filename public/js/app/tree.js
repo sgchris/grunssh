@@ -95,6 +95,11 @@ $(function() {
 		initialize: function() {
 			initializeFilesTree();
 			bindTreeEvents();
+		},
+		
+		destroy: function() {
+			// remove the current instance
+			$treeWrapper.jstree('destroy');			
 		}
 	}
 	
