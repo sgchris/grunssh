@@ -30,6 +30,5 @@ $(function() {
 	manageResize();
 	
 	auth.initialize();
-	tree.initialize();
 	editor.initialize();
 });

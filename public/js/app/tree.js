@@ -1,64 +1,30 @@
 $(function() {
 	
 	var $treeWrapper = $('#files-tree-wrapper');
+
+	// AJAX object
+	var treeXHR = null;
 	
-	var initializeFilesTree = function() {
+	var initializeFilesTree = function(rootFolder) {
 		$treeWrapper.jstree({
 			'core' : {
 				'data' : {
 					"url" : "/files",
 					"type": "post",
 					"data" : function (node) {
-						return $.extend({"id" : node.id}, auth.getData());
+						if (rootFolder) {
+							return $.extend({"id": node.id, "rootFolder": rootFolder}, auth.getData());
+						} else {
+							return $.extend({"id" : node.id}, auth.getData());
+						}
 					},
 					"dataType" : "json"
 				}
 			}
 		});
-	}
-
-	var setRootFolder = function() {
-		var getFolderFromUser = function(callbackFn) {
-			var newRootFolder = prompt('Set root folder');
-			if (newRootFolder && typeof(callbackFn) == 'function') {
-				callbackFn(newRootFolder);
-			}
-		}
-		
-		getFolderFromUser(function(newRootFolder) {
-			// remove the current instance
-			$treeWrapper.jstree('destroy');
-			
-			// create new tree
-			$treeWrapper.jstree({
-				'core' : {
-					'data' : {
-						"url" : "/files",
-						"type": "post",
-						"data" : function (node) {
-							console.log('node', node);
-							return $.extend({"id": node.id, "rootFolder": newRootFolder}, auth.getData());
-						},
-						"dataType" : "json"
-					}
-				}
-			});
-			
-			$treeWrapper.jstree('refresh');
-			
-			// re-bind events
-			bindTreeEvents();
-		});
-	};
-
-	// AJAX object
-	var treeXHR = null;
-
-	// bind tree events (open, save, ...)
-	var bindTreeEvents = function() {
 		
 		// select item in tree
-		$('#files-tree-wrapper').on('select_node.jstree', function(e, data) {
+		$treeWrapper.on('select_node.jstree', function(e, data) {
 			
 			// check if the node isn't file
 			if (data.node.original.type != 'file') {
@@ -81,11 +47,39 @@ $(function() {
 				dataType: 'json'
 			});
 		});
-		
+				
+	}
+
+	var getFolderFromUser = function(callbackFn) {
+		var newRootFolder = prompt('Set root folder');
+		if (newRootFolder && typeof(callbackFn) == 'function') {
+			callbackFn(newRootFolder);
+		}
+	}
+	
+	var setRootFolder = function() {
+		getFolderFromUser(function(newRootFolder) {
+			// remove the current instance
+			$treeWrapper.jstree('destroy');
+			
+			// create new tree
+			initializeFilesTree(newRootFolder);
+			
+			$treeWrapper.jstree('refresh');
+			
+			// re-bind events
+			// bindTreeEvents();
+		});
+	};
+
+	// bind tree events (open, save, ...)
+	var bindTreeEvents = function() {
+
 		// set root folder
-		$('#toolbar_set_root_folder').on('click', setRootFolder);
+		$('#left-sidebar .toolbar').on('click', '#toolbar_set_root_folder', setRootFolder);
 		
-		$('#toolbar_refresh').on('click', function() {
+		// refresh the tree
+		$('#left-sidebar .toolbar').on('click', '#toolbar_refresh', function() {
 			$treeWrapper.jstree('refresh');
 		});
 	}

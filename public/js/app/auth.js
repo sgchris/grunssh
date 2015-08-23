@@ -28,7 +28,7 @@
 
 	var initConnectForm = function() {
 
-		// submit action
+		// connection submit action
 		$('[name="connection-auth-form"]').on('submit', function(e) {
 			var originalSubmitButtonVal = $('#header_button_submit').val();
 			$('#header_button_submit').val('Connecting...');
@@ -46,6 +46,9 @@
 				
 				// disable the inputs
 				$('[name="connection-auth-form"]').find('input[type="text"], input[type="password"]').attr('disabled', true);
+				
+				// initialize the tree
+				tree.initialize();
 			}, function(errorMsg) {
 				// restore original button value
 				$('#header_button_submit').val(originalSubmitButtonVal);
