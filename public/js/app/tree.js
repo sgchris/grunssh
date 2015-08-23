@@ -5,6 +5,8 @@ $(function() {
 	// AJAX object
 	var treeXHR = null;
 	
+	var currentRootFolder = '/';
+	
 	var initializeFilesTree = function(rootFolder) {
 		$treeWrapper.jstree({
 			'core' : {
@@ -47,15 +49,16 @@ $(function() {
 				dataType: 'json'
 			});
 		});
-				
+		
 	}
-
+	
 	var getFolderFromUser = function(callbackFn) {
-		var newRootFolder = prompt('Set root folder');
+		var newRootFolder = prompt('Set root folder', currentRootFolder);
 		if (newRootFolder && typeof(callbackFn) == 'function') {
+			currentRootFolder = newRootFolder;
 			callbackFn(newRootFolder);
 		}
-	}
+	};
 	
 	var setRootFolder = function() {
 		getFolderFromUser(function(newRootFolder) {
