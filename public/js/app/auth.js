@@ -74,7 +74,8 @@
 			
 			// re-enable the inputs
 			$('[name="connection-auth-form"]').find('input[type="text"], input[type="password"]').removeAttr('disabled');
-
+			
+			// close the tree
 			tree.destroy();
 		});
 	}

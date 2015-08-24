@@ -141,6 +141,37 @@ class Files extends CI_Controller {
 		}
 	}
 	
+	/**
+	 * @brief create new folder
+	 * @method POST
+	 * @return  
+	 */
+	public function mkdir() {
+		$params = $this->input->post();
+		if (empty($params) ||
+			!isset($params['id']) ||
+			!isset($params['host']) ||
+			!isset($params['login']) ||
+			!isset($params['password'])
+		) {
+			echo json_encode(array('result' => 'error', 'error' => 'missing parameters'));
+			return;
+		}
+		
+		// connect to remote host
+		$ssh = new ssh($params['host'], $params['login'], $params['password']);
+		
+		$newFolderPath = str_replace('_SEP_', '/', $params['id']);
+		
+		$result = $ssh->mkdir($newFolderPath);
+		if ($result === false) {
+			echo json_encode(array('result' => 'error', 'error' => 'cannot create folder'));
+			return;
+		}
+		
+		echo json_encode(array('result' => 'success'));
+	}
+	
 	protected function sortFiles(array &$filesArray) {
 		return usort($filesArray, function($a, $b) {
 			if ($a['type'] !== $b['type']) {

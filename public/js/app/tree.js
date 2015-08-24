@@ -74,10 +74,50 @@ $(function() {
 			// bindTreeEvents();
 		});
 	};
+	
+	var addNewFolder = function() {
+		// get current selected folder in the tree
+		var selectedNode = $treeWrapper.jstree().get_selected(true);
+		if (!(selectedNode instanceof Array) || selectedNode.length != 1) {
+			alert('Please specify one folder');
+			return false;
+		}
+		selectedNode = selectedNode[0];
+		
+		// check that the selected item is folder
+		if (!selectedNode || !selectedNode.original || selectedNode.original.type != 'folder') {
+			alert('Please select a folder');
+			return false;
+		}
+		var selectedNode = selectedNode.id;
+		var newFolderName = prompt('New folder name');
+		if (!newFolderName) {
+			alert('No new folder name supplied');
+			return false;
+		}
+		
+		selectedNode+= '_SEP_' + newFolderName;
+		
+		// AJAX call to the server
+		$.ajax({
+			type: 'post',
+			url: '/files/mkdir',
+			data: $.extend({"id" : selectedNode}, auth.getData()),
+			success: function(res) {
+				if (res && res.result == 'success') {
+					$treeWrapper.jstree('refresh');
+				}
+			},
+			dataType: 'json'
+		});
+	}
 
 	// bind tree events (open, save, ...)
 	var bindTreeEvents = function() {
-
+		
+		// add new folder
+		$('#left-sidebar .toolbar').on('click', '#toolbar_add_folder', addNewFolder);
+		
 		// set root folder
 		$('#left-sidebar .toolbar').on('click', '#toolbar_set_root_folder', setRootFolder);
 		
