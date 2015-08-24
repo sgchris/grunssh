@@ -62,6 +62,9 @@
 
 		// disconnect
 		$('#header_button_disconnect').on('click', function() {
+			if (!confirm('Really disconnect?')) {
+				return false;
+			}
 			window.auth.connected = false;
 			
 			// enable/disable buttons
@@ -71,6 +74,8 @@
 			
 			// re-enable the inputs
 			$('[name="connection-auth-form"]').find('input[type="text"], input[type="password"]').removeAttr('disabled');
+
+			tree.destroy();
 		});
 	}
 
