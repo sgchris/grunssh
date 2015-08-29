@@ -1,4 +1,5 @@
 
+// the panels (editor and the tree)
 .main-panel {
 	display: block;
 	float: left;
@@ -42,6 +43,7 @@
 	}
 } 
 
+// the panel with the files tree including the toolbar
 #left-sidebar {
 	width: 300px;
 
@@ -50,6 +52,7 @@
 	}
 }
 
+// the panel with the editor including the toolbar
 #main-content {
 	#selected_file {
 		float: right;
@@ -59,3 +62,4 @@
 		line-height: 30px;
 	}
 }
+

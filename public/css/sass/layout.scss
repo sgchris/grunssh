@@ -8,6 +8,10 @@
 	box-sizing: border-box;
 }
 
+.hidden {
+	display: none;
+}
+
 body {
 	font: {
 		size: 14px;
@@ -29,4 +33,3 @@ body {
 		}
 	}
 }
-

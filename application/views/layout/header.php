@@ -23,6 +23,7 @@
 	    "/public/js/ace-builds/src-min-noconflict/ace.js?<?php echo uniqid('ver_');?>",	           
 	    "/public/js/ace-builds/src-min-noconflict/mode-php.js?<?php echo uniqid('ver_');?>",	           
 	    "/public/js/jstree/dist/jstree.min.js?<?php echo uniqid('ver_');?>",	           
+	    "/public/js/app/cookies.js?<?php echo uniqid('ver_');?>",	           
 	    "/public/js/app/auth.js?<?php echo uniqid('ver_');?>",	           
 	    "/public/js/app/tree.js?<?php echo uniqid('ver_');?>",	           
 	    "/public/js/app/editor.js?<?php echo uniqid('ver_');?>",	           
@@ -57,8 +58,13 @@
 			<input type="submit" value="Connect" id="header_button_submit" />
 			<input type="button" value="Disconnect" id="header_button_disconnect" disabled="true" />
 			<input type="button" value="Store connection (not secure!)" 
-				title="The connection information is stored in a cookie, including the password. Not recommended, unless you connect to your local development machine" 
+				title="The connection information is stored in a cookie including the password. Not recommended, unless you are aware of the security risks" 
+				class="hidden"
 				id="header_button_store_connection_in_cookie" disabled="true" />
+			<input type="button" value="Load stored connections" 
+				class="hidden"
+				title="Load previously stored connections" 
+				id="header_button_load_connections" disabled="true" />
 			</form>
 		</li>
 		<li>

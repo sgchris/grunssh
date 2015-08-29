@@ -8,7 +8,32 @@
 			"password": $('input[name="connection-auth-password"]').val(),
 		};
 	};
-
+	
+	// stored connections manager
+	var storedConnections = {
+		cookieName: 'sc',
+		get: function() {
+			var connections,
+				connectionsStr = docCookies.getItem(storedConnections.cookieName);
+				
+			try {
+				connections = connectionsStr && connectionsStr.length ? 
+					JSON.parse(connectionsStr) : [];
+			} catch (e) {
+				connections = [];
+			}
+			
+			return connections;
+		},
+		
+		add: function(connectionDetails) {
+			var currentConnections = storedConnections.get();
+			currentConnections.push(connectionDetails);
+			docCookies.setItem(storedConnections.cookieName, JSON.stringify(currentConnections));
+		}
+	};
+	
+	// connection to the remote server and call a callback
 	var testConnection = function(successFn, failureFn) {
 		$.ajax({
 			type: 'post',
@@ -26,6 +51,7 @@
 		});
 	}
 
+	// bind events on the connection form
 	var initConnectForm = function() {
 
 		// connection submit action
@@ -78,6 +104,22 @@
 			// close the tree
 			tree.destroy();
 		});
+	}
+	
+	var initButtons = function() {
+		if (window.auth.connected) {
+			// hide "load connections button"
+			document.getElementById('header_button_load_connections').classList.add('hidden');
+			
+			// hide "connect" button
+			document.getElementById('header_button_submit').classList.add('hidden');
+		} else {
+			if (storedConnections.get().length > 0) {
+				document.getElementById('header_button_load_connections').classList.remove('hidden');
+			} else {
+				document.getElementById('header_button_load_connections').classList.add('hidden');
+			}
+		}
 	}
 
 	// the exported object
