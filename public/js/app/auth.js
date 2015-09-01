@@ -38,6 +38,7 @@
 	
 	// connection to the remote server and call a callback
 	var testConnection = function(successFn, failureFn) {
+		window.app.log('testing connection');
 		$.ajax({
 			type: 'post',
 			url: '/auth/test',
@@ -56,12 +57,15 @@
 
 	// bind events on the connection form
 	var initConnectForm = function() {
-
+		
 		// connection submit action
 		$('[name="connection-auth-form"]').on('submit', function(e) {
+			window.app.log('connecting...');
 			var originalSubmitButtonVal = $('#header_button_submit').val();
 			$('#header_button_submit').val('Connecting...');
 			testConnection(function() {
+				window.app.log('connection succeeded');
+				
 				// set as connected
 				window.auth.connected = true;
 				
@@ -79,6 +83,8 @@
 				// initialize the tree
 				tree.initialize();
 			}, function(errorMsg) {
+				window.app.log('connection failed');
+				
 				// restore original button value
 				$('#header_button_submit').val(originalSubmitButtonVal);
 				
@@ -94,6 +100,9 @@
 			if (!confirm('Really disconnect?')) {
 				return false;
 			}
+			
+			window.app.log('disconnected');
+			
 			window.auth.connected = false;
 			
 			// enable/disable buttons

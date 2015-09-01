@@ -12,6 +12,16 @@
 			tabSize: 4
 		});
 		editorObject.session.setMode("ace/mode/php");	
+		
+		editorObject.commands.addCommand({
+			name: 'saveFile',
+			bindKey: {
+				win: 'Ctrl-S',
+				mac: 'Command-S',
+				sender: 'editor|cli'
+			},
+			exec: saveCurrentFile
+		});
 	};
 	
 	// currently selected file manager (the active file on the editor)
@@ -40,42 +50,54 @@
 
 	// AJAX object
 	var editorXHR = null;
-
-	var bindEditorEvents = function() {
-		$('#toolbar_save_file').on('click', function() {
-			var currentFile = selectedFile.get();
-			if (!currentFile) {
-				return;
-			}
-			
-			var fileContent = window.editor.getObject().getValue();
-			
-			// cancel previous request
-			editorXHR && editorXHR.abort();
-			
-			// notify
-			selectedFile.set('Saving...');
-			
-			// get the content of a file
-			editorXHR = $.ajax({
-				type: 'post',
-				url: '/files/content',
-				data: $.extend({"id" : currentFile, 'content': fileContent}, auth.getData()),
-				success: function(res) {
-					if (res && res.result == 'success') {
-						selectedFile.set('Saved!');
-						setTimeout(function() {
-							selectedFile.set(currentFile);
-						}, 2000);
-					}
-				},
-				dataType: 'json'
-			});
+	
+	// save the current open file in the editor
+	var saveCurrentFile = function() {
+		if (!window.auth.connected) {
+			window.app.log('not connected');
+			return;
+		}
+		
+		var currentFile = selectedFile.get();
+		if (!currentFile) {
+			window.app.log('no active file');
+			return;
+		}
+		
+		var fileContent = window.editor.getObject().getValue();
+		
+		// cancel previous request
+		editorXHR && editorXHR.abort();
+		
+		// notify
+		window.app.log('saving "' + currentFile.replace(/_SEP_/g, '/') + '"...');
+		
+		// get the content of a file
+		editorXHR = $.ajax({
+			type: 'post',
+			url: '/files/content',
+			data: $.extend({"id" : currentFile, 'content': fileContent}, auth.getData()),
+			success: function(res) {
+				if (res && res.result == 'success') {
+					window.app.log('saved successfully');
+					setTimeout(function() {
+						selectedFile.set(currentFile);
+					}, 2000);
+				} else {
+					window.app.log('error saving the file');
+				}
+			},
+			dataType: 'json'
 		});
+	}
+	
+	var bindEditorEvents = function() {
+		$('#toolbar_save_file').on('click', saveCurrentFile);
 		
 		$('#toolbar_reload_file').on('click', function() {
 			var currentFile = selectedFile.get();
 			if (!currentFile) {
+				window.app.log('no selected file');
 				return;
 			}
 			
@@ -83,7 +105,7 @@
 			editorXHR && editorXHR.abort();
 			
 			// notify
-			selectedFile.set('Reloading...');
+			window.app.log('Reloading...');
 			
 			// save curet position
 			var currentPosition = editorObject.getCursorPosition();
@@ -95,10 +117,13 @@
 				data: $.extend({"id" : currentFile}, auth.getData()),
 				success: function(res) {
 					if (res && res.result == 'success' && typeof(res.content) != 'undefined') {
+						window.app.log('reload file succeeded');
 						selectedFile.set(currentFile);
 						editorObject.setValue(res.content, -1);
 						editorObject.gotoLine(currentPosition.row + 1, currentPosition.column);
 						editorObject.focus();
+					} else {
+						window.app.log('error reloading the file');
 					}
 				},
 				dataType: 'json'

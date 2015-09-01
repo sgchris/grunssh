@@ -1,4 +1,8 @@
 
+#panels-wrapper {
+	overflow: auto;
+}
+
 // the panels (editor and the tree)
 .main-panel {
 	display: block;
@@ -63,3 +67,13 @@
 	}
 }
 
+#console-output {
+	height: 90px;
+	line-height: 18px;
+	
+	color: #888;
+	width: 100%;
+	min-width: 300px;
+	border: none;
+	background: #F4F4F4;
+}

@@ -36,6 +36,8 @@ $(function() {
 			// cancel previous request
 			treeXHR && treeXHR.abort();
 			
+			window.app.log('Loading file "' + data.node.id.replace(/_SEP_/g, '/') + '"');
+			
 			// get the content of a file
 			treeXHR = $.ajax({
 				type: 'post',
@@ -43,7 +45,10 @@ $(function() {
 				data: $.extend({"id" : data.node.id}, auth.getData()),
 				success: function(res) {
 					if (res && res.result == 'success' && typeof(res.content) != 'undefined') {
+						window.app.log('file "' + data.node.id.replace(/_SEP_/g, '/') + '" loaded successfully');
 						editor.openFile(data.node.id, res.content);
+					} else {
+						window.app.log('failed loading file "' + data.node.id.replace(/_SEP_/g, '/') + '"');
 					}
 				},
 				dataType: 'json'
@@ -62,12 +67,15 @@ $(function() {
 	
 	var setRootFolder = function() {
 		getFolderFromUser(function(newRootFolder) {
+			window.app.log('setting root folder to "' + newRootFolder.replace(/_SEP_/g, '/') + '"');
+			
 			// remove the current instance
 			$treeWrapper.jstree('destroy');
 			
 			// create new tree
 			initializeFilesTree(newRootFolder);
 			
+			window.app.log('refreshing the files tree');
 			$treeWrapper.jstree('refresh');
 			
 			// re-bind events
@@ -80,20 +88,20 @@ $(function() {
 		// get current selected folder in the tree
 		var selectedNode = $treeWrapper.jstree().get_selected(true);
 		if (!(selectedNode instanceof Array) || selectedNode.length != 1) {
-			alert('Please specify one folder');
+			window.app.log('Please specify one folder');
 			return false;
 		}
 		selectedNode = selectedNode[0];
 		
 		// check that the selected item is folder
 		if (!selectedNode || !selectedNode.original || selectedNode.original.type != 'folder') {
-			alert('Please select a folder');
+			window.app.log('Please select a folder');
 			return false;
 		}
 		var selectedNode = selectedNode.id;
 		var newFolderName = prompt('New folder name');
 		if (!newFolderName) {
-			alert('No new folder name supplied');
+			window.app.log('No new folder name supplied');
 			return false;
 		}
 		
@@ -105,8 +113,12 @@ $(function() {
 			url: '/files/mkdir',
 			data: $.extend({"id" : selectedNode}, auth.getData()),
 			success: function(res) {
+				window.app.log('Added new folder successfully')
 				if (res && res.result == 'success') {
+					window.app.log('refreshing the tree');
 					$treeWrapper.jstree('refresh');
+				} else {
+					window.app.log('cannot create new folder');
 				}
 			},
 			dataType: 'json'
@@ -118,20 +130,20 @@ $(function() {
 		// get current selected folder in the tree
 		var selectedNode = $treeWrapper.jstree().get_selected(true);
 		if (!(selectedNode instanceof Array) || selectedNode.length != 1) {
-			alert('Please specify one folder');
+			window.app.log('Please specify one folder');
 			return false;
 		}
 		selectedNode = selectedNode[0];
 		
 		// check that the selected item is folder
 		if (!selectedNode || !selectedNode.original || selectedNode.original.type != 'folder') {
-			alert('Please select a folder');
+			window.app.log('Please select a folder');
 			return false;
 		}
 		var selectedNode = selectedNode.id;
 		var newFileName = prompt('New file name');
 		if (!newFileName) {
-			alert('No new file name supplied');
+			window.app.log('No new file name supplied');
 			return false;
 		}
 		
@@ -144,7 +156,10 @@ $(function() {
 			data: $.extend({'id' : selectedNode, 'content': ''}, auth.getData()),
 			success: function(res) {
 				if (res && res.result == 'success') {
+					window.app.log('refreshing the tree');
 					$treeWrapper.jstree('refresh');
+				} else {
+					window.app.log('cannot create new file');
 				}
 			},
 			dataType: 'json'
