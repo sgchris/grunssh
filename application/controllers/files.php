@@ -49,6 +49,7 @@ class Files extends CI_Controller {
 					echo json_encode(array(array(
 						'id' => $rootFolderId,
 						'text' => $rootFolder,
+						'type' => 'folder',
 						'icon' => '/public/img/ic_folder_open_black_18dp.png',
 						'children' => true,
 					)));
@@ -56,6 +57,7 @@ class Files extends CI_Controller {
 					echo json_encode(array(array(
 						'id' => '_SEP_',
 						'text' => '/',
+						'type' => 'folder',
 						'icon' => '/public/img/ic_folder_open_black_18dp.png',
 						'children' => true,
 					)));
@@ -114,7 +116,7 @@ class Files extends CI_Controller {
 		
 		// get the parameter
 		$filePath = $params['id'];
-		$filePath = str_replace('_SEP_', DIRECTORY_SEPARATOR, $filePath);
+		$filePath = str_replace('_SEP_', '/', $filePath);
 		
 		// connect to remote host
 		$ssh = new ssh($params['host'], $params['login'], $params['password']);
@@ -124,7 +126,7 @@ class Files extends CI_Controller {
 			file_put_contents($this->localTempFile, $params['content']);
 			$result = $ssh->upload($this->localTempFile, $filePath);
 			if ($result === false) {
-				echo json_encode(array('result' => 'error', 'error' => 'cannot get remote file'));
+				echo json_encode(array('result' => 'error', 'error' => 'cannot upload file'));
 				return;
 			}
 			
