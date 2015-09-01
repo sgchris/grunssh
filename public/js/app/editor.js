@@ -48,7 +48,7 @@
 				return;
 			}
 			
-			var fileContent = window.editor.getValue();
+			var fileContent = window.editor.getObject().getValue();
 			
 			// cancel previous request
 			editorXHR && editorXHR.abort();

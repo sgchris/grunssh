@@ -1,4 +1,7 @@
-(function() {
+/**
+ * authentication / connection form
+ */
+;(function() {
 
 	// get authentication data from the form
 	var getData = function() {
