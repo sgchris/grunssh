@@ -75,6 +75,7 @@ $(function() {
 		});
 	};
 	
+	// add new folder callback
 	var addNewFolder = function() {
 		// get current selected folder in the tree
 		var selectedNode = $treeWrapper.jstree().get_selected(true);
@@ -111,12 +112,53 @@ $(function() {
 			dataType: 'json'
 		});
 	}
+	
+	// add new file callback
+	var addNewFile = function() {
+		// get current selected folder in the tree
+		var selectedNode = $treeWrapper.jstree().get_selected(true);
+		if (!(selectedNode instanceof Array) || selectedNode.length != 1) {
+			alert('Please specify one folder');
+			return false;
+		}
+		selectedNode = selectedNode[0];
+		
+		// check that the selected item is folder
+		if (!selectedNode || !selectedNode.original || selectedNode.original.type != 'folder') {
+			alert('Please select a folder');
+			return false;
+		}
+		var selectedNode = selectedNode.id;
+		var newFileName = prompt('New file name');
+		if (!newFileName) {
+			alert('No new file name supplied');
+			return false;
+		}
+		
+		selectedNode+= '_SEP_' + newFileName;
+		
+		// AJAX call to the server
+		$.ajax({
+			type: 'post',
+			url: '/files/content',
+			data: $.extend({'id' : selectedNode, 'content': ''}, auth.getData()),
+			success: function(res) {
+				if (res && res.result == 'success') {
+					$treeWrapper.jstree('refresh');
+				}
+			},
+			dataType: 'json'
+		});
+	}
 
 	// bind tree events (open, save, ...)
 	var bindTreeEvents = function() {
 		
 		// add new folder
 		$('#left-sidebar .toolbar').on('click', '#toolbar_add_folder', addNewFolder);
+		
+		// add new file
+		$('#left-sidebar .toolbar').on('click', '#toolbar_add_file', addNewFile);
 		
 		// set root folder
 		$('#left-sidebar .toolbar').on('click', '#toolbar_set_root_folder', setRootFolder);
