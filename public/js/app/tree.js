@@ -165,6 +165,45 @@ $(function() {
 			dataType: 'json'
 		});
 	}
+	
+	// add new file callback
+	var searchInFolder = function() {
+		// get current selected folder in the tree
+		var selectedNode = $treeWrapper.jstree().get_selected(true);
+		if (!(selectedNode instanceof Array) || selectedNode.length != 1) {
+			window.app.log('Please specify one folder');
+			return false;
+		}
+		selectedNode = selectedNode[0];
+		
+		// check that the selected item is folder
+		if (!selectedNode || !selectedNode.original || selectedNode.original.type != 'folder') {
+			window.app.log('Please select a folder');
+			return false;
+		}
+		
+		var selectedNode = selectedNode.id;
+		var searchString = prompt('Search for');
+		if (!searchString) {
+			window.app.log('No search term');
+			return false;
+		}
+		
+		// AJAX call to the server
+		$.ajax({
+			type: 'post',
+			url: '/files/search',
+			data: $.extend({'id' : selectedNode, 'term': searchString}, auth.getData()),
+			success: function(res) {
+				if (res && res.result == 'success') {
+					// display the results
+				} else {
+					window.app.log('cannot get search results');
+				}
+			},
+			dataType: 'json'
+		});
+	}
 
 	// bind tree events (open, save, ...)
 	var bindTreeEvents = function() {
@@ -174,6 +213,9 @@ $(function() {
 		
 		// add new file
 		$('#left-sidebar .toolbar').on('click', '#toolbar_add_file', addNewFile);
+		
+		// search in selected folder
+		$('#left-sidebar .toolbar').on('click', '#toolbar_search', searchInFolder);
 		
 		// set root folder
 		$('#left-sidebar .toolbar').on('click', '#toolbar_set_root_folder', setRootFolder);
