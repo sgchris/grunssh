@@ -51,6 +51,9 @@ $(function() {
 						window.app.log('failed loading file "' + data.node.id.replace(/_SEP_/g, '/') + '"');
 					}
 				},
+				error: function() {
+					window.app.log('failed loading file');
+				},
 				dataType: 'json'
 			});
 		});
@@ -121,6 +124,9 @@ $(function() {
 					window.app.log('cannot create new folder');
 				}
 			},
+			error: function() {
+				window.app.log('cannot create new folder');
+			},
 			dataType: 'json'
 		});
 	}
@@ -162,6 +168,9 @@ $(function() {
 					window.app.log('cannot create new file');
 				}
 			},
+			error: function() {
+				window.app.log('cannot create new file');
+			},
 			dataType: 'json'
 		});
 	}
@@ -195,11 +204,19 @@ $(function() {
 			url: '/files/search',
 			data: $.extend({'id' : selectedNode, 'term': searchString}, auth.getData()),
 			success: function(res) {
+				var p = new NativePopup(res);
+				p.show();
+				
 				if (res && res.result == 'success') {
 					// display the results
 				} else {
-					window.app.log('cannot get search results');
+					window.app.log('');
 				}
+			},
+			error: function() {
+				var p = new NativePopup('error getting results');
+				p.show();
+				window.app.log('cannot get search results');
 			},
 			dataType: 'json'
 		});

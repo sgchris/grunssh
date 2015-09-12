@@ -31,9 +31,9 @@ class Files extends CI_Controller {
 		$params = $this->input->post();
 		if (empty($params) ||
 			!isset($params['id']) ||
-			!isset($params['host']) ||
-			!isset($params['login']) ||
-			!isset($params['password'])
+			!isset($params['host']) || empty($params['host']) || 
+			!isset($params['login']) || empty($params['login']) ||
+			!isset($params['password']) || empty($params['password'])
 		) {
 			echo json_encode(array(
 				array(
@@ -106,9 +106,9 @@ class Files extends CI_Controller {
 		$params = $this->input->post();
 		if (empty($params) ||
 			!isset($params['id']) ||
-			!isset($params['host']) ||
-			!isset($params['login']) ||
-			!isset($params['password'])
+			!isset($params['host']) || empty($params['host']) || 
+			!isset($params['login']) || empty($params['login']) ||
+			!isset($params['password']) || empty($params['password'])
 		) {
 			echo json_encode(array('result' => 'error', 'error' => 'missing parameters'));
 			return;
@@ -151,10 +151,10 @@ class Files extends CI_Controller {
 	public function mkdir() {
 		$params = $this->input->post();
 		if (empty($params) ||
-			!isset($params['id']) ||
-			!isset($params['host']) ||
-			!isset($params['login']) ||
-			!isset($params['password'])
+			!isset($params['id']) || empty($params['id']) ||
+			!isset($params['host']) || empty($params['host']) || 
+			!isset($params['login']) || empty($params['login']) ||
+			!isset($params['password']) || empty($params['password'])
 		) {
 			echo json_encode(array('result' => 'error', 'error' => 'missing parameters'));
 			return;
@@ -166,6 +166,41 @@ class Files extends CI_Controller {
 		$newFolderPath = str_replace('_SEP_', '/', $params['id']);
 		
 		$result = $ssh->mkdir($newFolderPath);
+		if ($result === false) {
+			echo json_encode(array('result' => 'error', 'error' => 'cannot create folder'));
+			return;
+		}
+		
+		echo json_encode(array('result' => 'success'));
+	}	
+	/**
+	 * @brief create new folder
+	 * @method POST
+	 * @return  
+	 */
+	public function search() {
+		$params = $this->input->post();
+		if (empty($params) ||
+			!isset($params['id']) || empty($params['id']) ||
+			!isset($params['term']) || empty($params['term']) ||
+			!isset($params['host']) || empty($params['host']) || 
+			!isset($params['login']) || empty($params['login']) ||
+			!isset($params['password']) || empty($params['password'])
+		) {
+			echo json_encode(array('result' => 'error', 'error' => 'missing parameters'));
+			return;
+		}
+		
+		// connect to remote host
+		$ssh = new ssh($params['host'], $params['login'], $params['password']);
+		
+		$folderPath = str_replace('_SEP_', '/', $params['id']);
+		$term = $params['term'];
+		
+		$result = $ssh->exec('grep -r '.escapeshellarg($term).' '.escapeshellarg($folderPath));
+		$totalResults = substr_count($result, "\n");
+		die('total '.$totalResults.' results');
+		
 		if ($result === false) {
 			echo json_encode(array('result' => 'error', 'error' => 'cannot create folder'));
 			return;

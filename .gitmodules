@@ -10,3 +10,6 @@
 [submodule "public/js/griquire"]
 	path = public/js/griquire
 	url = https://github.com/sgchris/griquire.git
+[submodule "public/js/native-popup"]
+	path = public/js/native-popup
+	url = https://sgchris@github.com/sgchris/native-popup.git
