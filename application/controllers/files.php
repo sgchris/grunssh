@@ -176,6 +176,7 @@ class Files extends CI_Controller {
 	/**
 	 * @brief create new folder
 	 * @method POST
+	 * 	 * grep -r -i -B 2 -A 1 "n Search" --include \*php /var/www/grunssh
 	 * @return  
 	 */
 	public function search() {
@@ -191,22 +192,42 @@ class Files extends CI_Controller {
 			return;
 		}
 		
+		$fileNamesOnly = isset($params['onlyFiles']) && $params['onlyFiles'] == 1;
+		
 		// connect to remote host
 		$ssh = new ssh($params['host'], $params['login'], $params['password']);
 		
 		$folderPath = str_replace('_SEP_', '/', $params['id']);
 		$term = $params['term'];
 		
-		$result = $ssh->exec('grep -r '.escapeshellarg($term).' '.escapeshellarg($folderPath));
+		$commandParams = '';
+		if ($fileNamesOnly) {
+			$commandParams.= ' -l ';
+		}
+		
+		$result = $ssh->exec('grep -r '.$commandParams.' '.escapeshellarg($term).' '.escapeshellarg($folderPath));
 		$totalResults = substr_count($result, "\n");
-		die('total '.$totalResults.' results');
 		
 		if ($result === false) {
 			echo json_encode(array('result' => 'error', 'error' => 'cannot create folder'));
 			return;
 		}
 		
-		echo json_encode(array('result' => 'success'));
+		// get list of results
+		$results = explode("\n", $result);
+		
+		// clear empty lines
+		$results = array_filter($results, 'strlen');
+		
+		// keep files with path (starting with "/")
+		$results = array_filter($results, function($el) {
+			return preg_match('%^/%', $el);
+		});
+		
+		// rearrange the array
+		$results = array_values($results);
+		
+		echo json_encode(array('result' => 'success', 'occurrences' => $results));
 	}
 	
 	protected function sortFiles(array &$filesArray) {

@@ -202,21 +202,19 @@ $(function() {
 		$.ajax({
 			type: 'post',
 			url: '/files/search',
-			data: $.extend({'id' : selectedNode, 'term': searchString}, auth.getData()),
+			data: $.extend({'id' : selectedNode, 'onlyFiles': 1, 'term': searchString}, auth.getData()),
 			success: function(res) {
-				var p = new NativePopup(res);
-				p.show();
-				
-				if (res && res.result == 'success') {
-					// display the results
+				if (res && res.result == 'success' && res.occurrences) {
+					var p = new NativePopup(res.occurrences.join('<br/>'));
+					p.show();
 				} else {
-					window.app.log('');
+					window.app.log('Error getting search results');
 				}
 			},
 			error: function() {
-				var p = new NativePopup('error getting results');
+				var p = new NativePopup('Error getting search results');
 				p.show();
-				window.app.log('cannot get search results');
+				window.app.log('Error getting search results');
 			},
 			dataType: 'json'
 		});

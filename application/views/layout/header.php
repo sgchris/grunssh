@@ -24,7 +24,7 @@
 	    "/public/js/ace-builds/src-min-noconflict/mode-php.js?<?php echo uniqid('ver_');?>",	           
 	    "/public/js/jstree/dist/jstree.min.js?<?php echo uniqid('ver_');?>",	           
 	    "/public/js/app/cookies.js?<?php echo uniqid('ver_');?>",	           
-	    "/public/js/native-popup/native-popup.min.js?<?php echo uniqid('ver_');?>",	           
+	    "/public/js/native-popup/native-popup.js?<?php echo uniqid('ver_');?>",	           
 	    "/public/js/app/auth.js?<?php echo uniqid('ver_');?>",	           
 	    "/public/js/app/tree.js?<?php echo uniqid('ver_');?>",	           
 	    "/public/js/app/editor.js?<?php echo uniqid('ver_');?>",	           
